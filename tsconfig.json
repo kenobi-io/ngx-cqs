@@ -17,7 +17,15 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "ngx-cqrs": [
+        "dist/ngx-cqrs"
+      ],
+      "ngx-cqrs/*": [
+        "dist/ngx-cqrs/*"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

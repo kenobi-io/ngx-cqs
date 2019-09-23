@@ -1,0 +1,11 @@
+export { AggregateRoot } from './lib/aggregate-root';
+export * from './lib/command-bus';
+export * from './lib/cqrs.module';
+export * from './lib/decorators';
+export * from './lib/event-bus';
+export * from './lib/event-publisher';
+export * from './lib/exceptions';
+export * from './lib/interfaces';
+export * from './lib/operators';
+export * from './lib/query-bus';
+export * from './lib/utils';
