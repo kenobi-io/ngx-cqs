@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/npm-cqrs",
+            "outputPath": "dist/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -122,6 +122,24 @@
               "devServerTarget": "npm-cqrs:serve:production"
             }
           }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/server",
+            "main": "src/main.server.ts",
+            "tsConfig": "tsconfig.server.json"
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
         }
       }
     },
@@ -138,9 +156,7 @@
             "project": "projects/ngx-cqrs/ng-package.json"
           },
           "configurations": {
-            "production": {
-              
-            }
+            "production": {}
           }
         },
         "test": {
@@ -164,6 +180,7 @@
           }
         }
       }
-    }},
+    }
+  },
   "defaultProject": "npm-cqrs"
 }

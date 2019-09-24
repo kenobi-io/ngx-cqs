@@ -7,13 +7,15 @@ import { EventPublisher } from './event-publisher';
 import { QueryBus } from './query-bus';
 import { ExplorerService } from './services/explorer.service';
 
-export function createExplorerService() {
+const createExplorerService = (modules) => {
+  // tslint:disable-next-line: no-use-before-declare
+  CqrsModule.modules = modules;
   return new ExplorerService();
-}
+};
 
 // @dynamic
 @NgModule({
-  imports: [CommonModule, BrowserModule], 
+  imports: [CommonModule, BrowserModule],
   providers: [CommandBus, QueryBus, EventBus, EventPublisher, ExplorerService]
 })
 export class CqrsModule {
@@ -24,9 +26,7 @@ export class CqrsModule {
     private readonly explorerService: ExplorerService,
     private readonly eventsBus: EventBus,
     private readonly commandsBus: CommandBus,
-    private readonly queryBus: QueryBus
-  ) { 
-    console.log('modules', CqrsModule.modules);
+    private readonly queryBus: QueryBus) {
     const { events, queries, sagas, commands } = this.explorerService.explore(CqrsModule.modules);
 
     this.eventsBus.register(events);
@@ -43,12 +43,8 @@ export class CqrsModule {
       providers: [
         {
           provide: ExplorerService,
-          useFactory: function () {
-
-            CqrsModule.modules = modules;
-            return new ExplorerService();
-          },
-          deps: []
+          useFactory: createExplorerService,
+          deps: [modules]
         },
         CommandBus,
         QueryBus,
@@ -58,3 +54,4 @@ export class CqrsModule {
     }
   }
 }
+
