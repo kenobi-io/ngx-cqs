@@ -1,0 +1,13 @@
+.tile-container {
+  display: flex;
+  padding-top: 60px;
+  align-content: flex-start;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  box-sizing: border-box;
+
+  @media(max-width: 780px) {
+    padding-top: 0px;
+    margin: 12px -0.7em;
+  }
+}

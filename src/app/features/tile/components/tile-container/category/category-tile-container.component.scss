@@ -1,0 +1,10 @@
+.tile-container {
+  display: flex;
+  flex: 2 1 auto;
+  align-content: flex-start;
+  flex-direction: column;
+
+  @media(max-width: 780px) {
+    flex-direction: row;
+  }
+}

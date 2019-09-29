@@ -4,7 +4,7 @@ using example:
 ``` javascript
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CqrsModule } from 'ngx-cqrs';
+import { CqrsModule } from 'projects/ngx-cqrs/src/public-api';
 import { MyModule } from '../features/my-module/my-module.module';
 
 @NgModule({
@@ -18,7 +18,7 @@ export class SharedModule { }
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CqrsModule } from 'ngx-cqrs';
+import { CqrsModule } from 'projects/ngx-cqrs/src/public-api';
 import { sagas } from './sagas/sagas';
 import { commandHandlers } from './commands/commandes';
 import { QueryHandler } from './queries/handler/query.handler';

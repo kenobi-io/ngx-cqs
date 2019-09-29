@@ -2,7 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { CqrsModule } from 'projects/ngx-cqrs/src/public-api';
+import { CqrsModule } from '../../projects/ngx-cqrs/src/public-api';
+import { TileModule } from './features/tile/tile.module';
 
 @NgModule({
   declarations: [
@@ -10,7 +11,7 @@ import { CqrsModule } from 'projects/ngx-cqrs/src/public-api';
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
-    CqrsModule.forRoot([AppModule])
+    CqrsModule.forRoot([TileModule])
   ],
   providers: [],
   bootstrap: [AppComponent]

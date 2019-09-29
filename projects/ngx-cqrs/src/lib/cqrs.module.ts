@@ -1,4 +1,4 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import { NgModule, ModuleWithProviders, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommandBus } from './command-bus';
@@ -7,11 +7,11 @@ import { EventPublisher } from './event-publisher';
 import { QueryBus } from './query-bus';
 import { ExplorerService } from './services/explorer.service';
 
-const createExplorerService = (modules) => {
+export function createExplorerService (modules) {
   // tslint:disable-next-line: no-use-before-declare
   CqrsModule.modules = modules;
-  return new ExplorerService();
-};
+  return new ExplorerService(CqrsModule.platform);
+}
 
 // @dynamic
 @NgModule({
@@ -21,23 +21,26 @@ const createExplorerService = (modules) => {
 export class CqrsModule {
 
   static modules: any[];
+  // tslint:disable-next-line: ban-types
+  static platform: Object;
 
-  constructor(
-    private readonly explorerService: ExplorerService,
-    private readonly eventsBus: EventBus,
-    private readonly commandsBus: CommandBus,
-    private readonly queryBus: QueryBus) {
-    const { events, queries, sagas, commands } = this.explorerService.explore(CqrsModule.modules);
+  // tslint:disable-next-line: ban-types
+  constructor(@Inject(PLATFORM_ID) private readonly platform: Object,
+              private readonly explorerService: ExplorerService,
+              private readonly eventsBus: EventBus,
+              private readonly commandsBus: CommandBus,
+              private readonly queryBus: QueryBus) {
 
-    this.eventsBus.register(events);
-    this.commandsBus.register(commands);
-    this.queryBus.register(queries);
-    this.eventsBus.registerSagas(sagas);
+      CqrsModule.platform = this.platform;
+      const { events, queries, sagas, commands } = this.explorerService.explore(CqrsModule.modules);
+      this.eventsBus.register(events);
+      this.commandsBus.register(commands);
+      this.queryBus.register(queries);
+      this.eventsBus.registerSagas(sagas);
 
   }
 
   public static forRoot(modules: any[]): ModuleWithProviders {
-
     return {
       ngModule: CqrsModule,
       providers: [
