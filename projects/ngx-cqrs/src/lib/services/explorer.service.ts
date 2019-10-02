@@ -1,4 +1,5 @@
-import { Injectable, NgModule, Type, Inject, PLATFORM_ID } from '@angular/core';
+import 'reflect-metadata';
+import { Injectable, NgModule, Type } from '@angular/core';
 import {
   COMMAND_HANDLER_METADATA,
   EVENTS_HANDLER_METADATA,
@@ -7,15 +8,15 @@ import {
 } from '../decorators/constants';
 import { ICommandHandler, IEventHandler, IQueryHandler } from '../interfaces';
 import { CqrsOptions } from '../interfaces/cqrs-options.interface';
-import 'reflect-metadata';
-import { isPlatformBrowser } from '@angular/common';
+import { PlatformService } from './platform.service';
 
 @Injectable()
 export class ExplorerService {
-  // tslint:disable-next-line: ban-types
-  constructor(@Inject(PLATFORM_ID) private platform: Object) { }
+
+  constructor(private platformService: PlatformService) { }
 
   explore(cqrsModules: any[]): CqrsOptions {
+
     const modules: any[] = cqrsModules && [...cqrsModules] || [];
     const commands = this.flatMap<ICommandHandler>(modules,
       instance => this.filterProvider(instance, COMMAND_HANDLER_METADATA),
@@ -37,40 +38,40 @@ export class ExplorerService {
     callback: (instance: any) => Type<any> | undefined,
   ): Type<T>[] {
 
-    if (isPlatformBrowser(this.platform)) {
-      const items = modules
-        .map((ngModule: NgModule) => {
+    // if (isPlatformBrowser(this.platformService.platform)) {
+    const items = modules
+      .map((ngModule: NgModule) => {
 
-          const CustomModule = ngModule.constructor as typeof NgModule;
-          const annotations = ngModule['__annotations__'];
+        const CustomModule = ngModule.constructor as typeof NgModule;
+        const annotations = ngModule['__annotations__'];
 
-          if (annotations && annotations[0] && annotations[0].providers) {
+        if (annotations && annotations[0] && annotations[0].providers) {
 
-            const providers = annotations[0].providers;
+          const providers = annotations[0].providers;
+          return [...providers].map(callback);
+
+        } else {
+
+          // const meta = Reflect.getOwnMetadata('__annotations__', CustomModule);
+          let meta = Reflect.getOwnPropertyDescriptor(CustomModule, '__annotations__');
+          meta = meta && meta.value;
+          if (meta && meta[0] && meta[0].providers) {
+
+            const providers = meta[0].providers;
             return [...providers].map(callback);
 
-          } else {
+          } else if (CustomModule
+            && (CustomModule as any).ngInjectorDef
+            && (CustomModule as any).ngInjectorDef.providers) {
 
-            const meta = Reflect.getOwnMetadata('__annotations__', ngModule);
-
-            if (meta && meta[0] && meta[0].providers) {
-
-              const providers = meta[0].providers;
-              return [...providers].map(callback);
-
-            } else if (CustomModule
-                       && CustomModule.prototype
-                       && CustomModule.prototype.ngInjectorDef
-                       && CustomModule.prototype.ngInjectorDef.providers) {
-
-              const providers = CustomModule.prototype.ngInjectorDef.providers;
-              return [...providers].map(callback);
-            }
+            const providers = (CustomModule as any).ngInjectorDef.providers;
+            return [...providers].map(callback);
           }
-        })
-        .reduce((a, b) => a.concat(b), []);
-      return items.filter(element => !!element) as Type<T>[];
-    }
+        }
+      })
+      .reduce((a, b) => a.concat(b), []);
+    return items.filter(element => !!element) as Type<T>[];
+    // }
   }
 
   filterProvider(

@@ -6,32 +6,29 @@ import { EventBus } from './event-bus';
 import { EventPublisher } from './event-publisher';
 import { QueryBus } from './query-bus';
 import { ExplorerService } from './services/explorer.service';
+import { PlatformService } from './services/platform.service';
 
-export function createExplorerService (modules) {
+export function createExplorerService (modules, platformService: PlatformService) {
   // tslint:disable-next-line: no-use-before-declare
   CqrsModule.modules = modules;
-  return new ExplorerService(CqrsModule.platform);
+  return new ExplorerService(platformService);
 }
 
 // @dynamic
 @NgModule({
   imports: [CommonModule, BrowserModule],
-  providers: [CommandBus, QueryBus, EventBus, EventPublisher, ExplorerService]
+  providers: [CommandBus, QueryBus, EventBus, EventPublisher, PlatformService, ExplorerService]
 })
 export class CqrsModule {
 
   static modules: any[];
-  // tslint:disable-next-line: ban-types
-  static platform: Object;
 
   // tslint:disable-next-line: ban-types
-  constructor(@Inject(PLATFORM_ID) private readonly platform: Object,
-              private readonly explorerService: ExplorerService,
+  constructor(private readonly explorerService: ExplorerService,
               private readonly eventsBus: EventBus,
               private readonly commandsBus: CommandBus,
               private readonly queryBus: QueryBus) {
 
-      CqrsModule.platform = this.platform;
       const { events, queries, sagas, commands } = this.explorerService.explore(CqrsModule.modules);
       this.eventsBus.register(events);
       this.commandsBus.register(commands);
@@ -47,7 +44,7 @@ export class CqrsModule {
         {
           provide: ExplorerService,
           useFactory: createExplorerService,
-          deps: [modules]
+          deps: [modules, PlatformService]
         },
         CommandBus,
         QueryBus,
