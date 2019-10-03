@@ -4,4 +4,4 @@
 
  npm run package
 
- cd dist/ngx-cqrs $ npm publish
+ cd dist/ngx-cqrs && npm publish

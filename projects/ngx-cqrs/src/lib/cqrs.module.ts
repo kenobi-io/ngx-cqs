@@ -1,4 +1,4 @@
-import { NgModule, ModuleWithProviders, Inject, PLATFORM_ID } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommandBus } from './command-bus';
@@ -8,43 +8,45 @@ import { QueryBus } from './query-bus';
 import { ExplorerService } from './services/explorer.service';
 import { PlatformService } from './services/platform.service';
 
-export function createExplorerService (modules, platformService: PlatformService) {
+export function createExplorerService(providers) {
   // tslint:disable-next-line: no-use-before-declare
-  CqrsModule.modules = modules;
-  return new ExplorerService(platformService);
+  CqrsModule.providers = providers;
+  return new ExplorerService();
 }
 
 // @dynamic
 @NgModule({
   imports: [CommonModule, BrowserModule],
-  providers: [CommandBus, QueryBus, EventBus, EventPublisher, PlatformService, ExplorerService]
+  providers: [CommandBus, QueryBus, EventBus, EventPublisher, ExplorerService]
 })
 export class CqrsModule {
 
-  static modules: any[];
+  static providers: any[];
 
-  // tslint:disable-next-line: ban-types
   constructor(private readonly explorerService: ExplorerService,
               private readonly eventsBus: EventBus,
               private readonly commandsBus: CommandBus,
               private readonly queryBus: QueryBus) {
 
-      const { events, queries, sagas, commands } = this.explorerService.explore(CqrsModule.modules);
+    // tslint:disable-next-line: no-unused-expression
+    CqrsModule.providers && Array.from(CqrsModule.providers).forEach((provider) => {
+      const { events, queries, sagas, commands } = this.explorerService.explore(provider);
       this.eventsBus.register(events);
       this.commandsBus.register(commands);
       this.queryBus.register(queries);
       this.eventsBus.registerSagas(sagas);
+    });
 
   }
 
-  public static forRoot(modules: any[]): ModuleWithProviders {
+  public static forRoot(providers: any[]): ModuleWithProviders {
     return {
       ngModule: CqrsModule,
       providers: [
         {
           provide: ExplorerService,
           useFactory: createExplorerService,
-          deps: [modules, PlatformService]
+          deps: [providers]
         },
         CommandBus,
         QueryBus,

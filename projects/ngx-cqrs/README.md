@@ -5,12 +5,13 @@ using example:
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CqrsModule } from 'projects/ngx-cqrs/src/public-api';
-import { MyModule } from '../features/my-module/my-module.module';
+import { cqrsProvidersMyModule } from '../features/my-module/my-module.module';
+import { cqrsProvidersMyModule2 } from '../features/my-module/my-module-2.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    CqrsModule.forRoot([MyModule]),
+    CqrsModule.forRoot([...cqrsProvidersMyModule, ...cqrsProvidersMyModule2]),
     MyModule
   ]
 })
@@ -23,6 +24,8 @@ import { sagas } from './sagas/sagas';
 import { commandHandlers } from './commands/commandes';
 import { QueryHandler } from './queries/handler/query.handler';
 const queryHandlers = [QueryHandler];
+
+export const cqrsProvidersMyModule = [...commandHandlers,...queryHandlers,...sagas]
 
 @NgModule({
   imports: [

@@ -8,70 +8,33 @@ import {
 } from '../decorators/constants';
 import { ICommandHandler, IEventHandler, IQueryHandler } from '../interfaces';
 import { CqrsOptions } from '../interfaces/cqrs-options.interface';
-import { PlatformService } from './platform.service';
-
 @Injectable()
 export class ExplorerService {
 
-  constructor(private platformService: PlatformService) { }
+  constructor() { }
 
-  explore(cqrsModules: any[]): CqrsOptions {
+  explore(cqrsProviders: any[]): CqrsOptions {
 
-    const modules: any[] = cqrsModules && [...cqrsModules] || [];
-    const commands = this.flatMap<ICommandHandler>(modules,
+    const providers: any[] = cqrsProviders && [...cqrsProviders] || [];
+    const commands = this.flatMap<ICommandHandler>(providers,
       instance => this.filterProvider(instance, COMMAND_HANDLER_METADATA),
     );
-    const queries = this.flatMap<IQueryHandler>(modules,
+    const queries = this.flatMap<IQueryHandler>(providers,
       instance => this.filterProvider(instance, QUERY_HANDLER_METADATA),
     );
-    const events = this.flatMap<IEventHandler>(modules,
+    const events = this.flatMap<IEventHandler>(providers,
       instance => this.filterProvider(instance, EVENTS_HANDLER_METADATA),
     );
-    const sagas = this.flatMap(modules,
+    const sagas = this.flatMap(providers,
       instance => this.filterProvider(instance, SAGA_METADATA),
     );
     return { commands, queries, events, sagas };
   }
 
-  flatMap<T>(
-    modules: NgModule[],
-    callback: (instance: any) => Type<any> | undefined,
-  ): Type<T>[] {
-
-    // if (isPlatformBrowser(this.platformService.platform)) {
-    const items = modules
-      .map((ngModule: NgModule) => {
-
-        const CustomModule = ngModule.constructor as typeof NgModule;
-        const annotations = ngModule['__annotations__'];
-
-        if (annotations && annotations[0] && annotations[0].providers) {
-
-          const providers = annotations[0].providers;
-          return [...providers].map(callback);
-
-        } else {
-
-          // const meta = Reflect.getOwnMetadata('__annotations__', CustomModule);
-          let meta = Reflect.getOwnPropertyDescriptor(CustomModule, '__annotations__');
-          meta = meta && meta.value;
-          if (meta && meta[0] && meta[0].providers) {
-
-            const providers = meta[0].providers;
-            return [...providers].map(callback);
-
-          } else if (CustomModule
-            && (CustomModule as any).ngInjectorDef
-            && (CustomModule as any).ngInjectorDef.providers) {
-
-            const providers = (CustomModule as any).ngInjectorDef.providers;
-            return [...providers].map(callback);
-          }
-        }
-      })
-      .reduce((a, b) => a.concat(b), []);
+  flatMap<T>(providers: any[],
+             callback: (instance: any) => Type<any> | undefined): Type<T>[] {
+    const items = [...providers].map(callback).reduce((a, b) => a.concat(b), []);
     return items.filter(element => !!element) as Type<T>[];
-    // }
   }
 
   filterProvider(

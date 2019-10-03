@@ -14,6 +14,9 @@ import { GetAllTilesQueryHandler } from './queries/handler/get-all-tiles.handler
 
 const queryHandlers = [GetCategoriesTileHandler, GetTilesForCategoryQueryHandler, GetAllTilesQueryHandler];
 
+export const cqrsProviders = [    ...commandHandlers,
+  ...queryHandlers,
+  ...sagas];
 @NgModule({
   imports: [
     CommonModule,
@@ -24,9 +27,7 @@ const queryHandlers = [GetCategoriesTileHandler, GetTilesForCategoryQueryHandler
   exports: [...tileComponents],
   providers: [
     ...services,
-    ...commandHandlers,
-    ...queryHandlers,
-    ...sagas,
+    ...cqrsProviders,
     ...storeProviders]
 })
 export class TileModule { }
