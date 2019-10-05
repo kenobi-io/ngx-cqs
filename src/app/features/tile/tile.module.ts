@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Provider } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CqrsModule } from '../../../../projects/ngx-cqrs/src/public-api';
@@ -10,13 +10,10 @@ import { storeProviders } from './stores/stores';
 import { GetCategoriesTileHandler } from './queries/handler/categories-tile.handler';
 import { GetTilesForCategoryQueryHandler } from './queries/handler/get-tiles-for-category.handler';
 import { GetAllTilesQueryHandler } from './queries/handler/get-all-tiles.handler';
+import { eventHandlers } from './events/events';
 
 
-const queryHandlers = [GetCategoriesTileHandler, GetTilesForCategoryQueryHandler, GetAllTilesQueryHandler];
-
-export const cqrsProviders = [    ...commandHandlers,
-  ...queryHandlers,
-  ...sagas];
+export const queryHandlers = [GetCategoriesTileHandler, GetTilesForCategoryQueryHandler, GetAllTilesQueryHandler];
 @NgModule({
   imports: [
     CommonModule,
@@ -27,7 +24,10 @@ export const cqrsProviders = [    ...commandHandlers,
   exports: [...tileComponents],
   providers: [
     ...services,
-    ...cqrsProviders,
+    ...eventHandlers,
+    ...commandHandlers,
+    ...queryHandlers,
+    ...sagas,
     ...storeProviders]
 })
 export class TileModule { }

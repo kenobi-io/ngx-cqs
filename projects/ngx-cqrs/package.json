@@ -1,6 +1,6 @@
 {
   "name": "ngx-cqrs",
-  "version": "2.0.2",
+  "version": "3.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/odobdober/ngx-cqrs.git"

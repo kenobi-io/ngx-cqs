@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Injectable, NgModule, Type } from '@angular/core';
+import { Injectable, NgModule, Type, Provider } from '@angular/core';
 import {
   COMMAND_HANDLER_METADATA,
   EVENTS_HANDLER_METADATA,
@@ -15,7 +15,7 @@ export class ExplorerService {
 
   explore(cqrsProviders: any[]): CqrsOptions {
 
-    const providers: any[] = cqrsProviders && [...cqrsProviders] || [];
+    const providers: Provider[] = cqrsProviders || [];
     const commands = this.flatMap<ICommandHandler>(providers,
       instance => this.filterProvider(instance, COMMAND_HANDLER_METADATA),
     );

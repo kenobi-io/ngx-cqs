@@ -5,14 +5,18 @@ using example:
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CqrsModule } from 'projects/ngx-cqrs/src/public-api';
-import { cqrsProvidersMyModule } from '../features/my-module/my-module.module';
-import { cqrsProvidersMyModule2 } from '../features/my-module/my-module-2.module';
+import { cqrsProvidersOneMyCqrsModule } from '../features/my-module/my-module.module';
+import { cqrsProvidersTwoMyCqrsModule } from '../features/my-module/my-module-2.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    CqrsModule.forRoot([...cqrsProvidersMyModule, ...cqrsProvidersMyModule2]),
-    MyModule
+    CqrsModule.forRoot([      
+      {moduleType: OneMyCqrsModule, cqrsProviders: cqrsProvidersOneMyCqrsModule },
+      {moduleType: TwoMyCqrsModule, cqrsProviders: cqrsProvidersTwoMyCqrsModule }
+      ]),
+    OneMyCqrsModule,
+    TwoMyCqrsModule
   ]
 })
 export class SharedModule { }
@@ -25,7 +29,7 @@ import { commandHandlers } from './commands/commandes';
 import { QueryHandler } from './queries/handler/query.handler';
 const queryHandlers = [QueryHandler];
 
-export const cqrsProvidersMyModule = [...commandHandlers,...queryHandlers,...sagas]
+export const cqrsProvidersOneMyCqrsModule = [...commandHandlers,...queryHandlers,...sagas]
 
 @NgModule({
   imports: [
@@ -36,7 +40,7 @@ export const cqrsProvidersMyModule = [...commandHandlers,...queryHandlers,...sag
      ...queryHandlers,
      ...sagas]
 })
-export class MyModule { }
+export class OneMyCqrsModule { }
 ```
 
 How create cqrs elements you can learn in https://docs.nestjs.com/recipes/cqrs
