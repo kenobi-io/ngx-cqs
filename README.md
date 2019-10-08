@@ -12,7 +12,7 @@ using example:
 ``` javascript
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CqrsModule } from 'projects/ngx-cqrs/src/public-api';
+import { CqrsModule } from 'ngx-cqrs';
 import { cqrsProvidersOneMyCqrsModule } from '../features/my-module/my-module.module';
 import { cqrsProvidersTwoMyCqrsModule } from '../features/my-module/my-module-2.module';
 
@@ -31,7 +31,7 @@ export class SharedModule { }
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CqrsModule } from 'projects/ngx-cqrs/src/public-api';
+import { CqrsModule } from 'ngx-cqrs';
 import { sagas } from './sagas/sagas';
 import { commandHandlers } from './commands/commandes';
 import { QueryHandler } from './queries/handler/query.handler';
@@ -42,7 +42,7 @@ export const cqrsProvidersOneMyCqrsModule = [...commandHandlers,...queryHandlers
 @NgModule({
   imports: [
     CommonModule,
-    CqrsModule,],
+    CqrsModule],
   providers: [
      ...commandHandlers,
      ...queryHandlers,
@@ -54,7 +54,7 @@ export class OneMyCqrsModule { }
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CqrsModule } from 'projects/ngx-cqrs/src/public-api';
+import { CqrsModule } from 'ngx-cqrs';
 import { sagas } from './sagas/sagas';
 import { commandHandlers } from './commands/commandes';
 import { QueryHandler } from './queries/handler/query.handler';

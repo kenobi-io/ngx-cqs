@@ -59,7 +59,7 @@ export const cqrsProvidersTwoMyCqrsModule = [...commandHandlers,...queryHandlers
 @NgModule({
   imports: [
     CommonModule,
-    CqrsModule,],
+    CqrsModule],
   providers: [
      ...commandHandlers,
      ...queryHandlers,
