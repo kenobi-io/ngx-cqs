@@ -5,6 +5,17 @@
     "type": "git",
     "url": "https://github.com/odobdober/ngx-cqrs.git"
   },
+  "author": {
+    "name": "dobdober",
+    "email": "odobdober@gmail.com"
+  },
+  "keywords": [
+    "angular",
+    "angular cqrs",
+    "ng cqrs",
+    "ngx cqrs"
+  ],
+  "license": "MIT",
   "peerDependencies": {
     "@angular/common": "^8.2.7",
     "@angular/compiler": "^8.2.7",
