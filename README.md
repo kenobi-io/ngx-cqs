@@ -1,6 +1,6 @@
 # NpmCqrs
 
- yarn run build:ssr
+ npm run build:ssr
 
  npm run package
 

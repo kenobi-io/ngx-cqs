@@ -37,6 +37,7 @@
     "@nguniversal/module-map-ngfactory-loader": "^8.0.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "~6.4.0",
+    "semver": "^7.1.1",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
   },

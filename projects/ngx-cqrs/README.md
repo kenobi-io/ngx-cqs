@@ -1,6 +1,8 @@
-# Cqrs
+# Cqs
 
 using example: 
+How create cqs elements you can learn in https://docs.nestjs.com/recipes/cqrs
+git example - https://github.com/kamilmysliwiec/nest-cqrs-example
 ``` javascript
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -67,6 +69,3 @@ export const cqrsProvidersTwoMyCqrsModule = [...commandHandlers,...queryHandlers
 })
 export class TwoMyCqrsModule { }
 ```
-
-How create cqrs elements you can learn in https://docs.nestjs.com/recipes/cqrs
-git example - https://github.com/kamilmysliwiec/nest-cqrs-example
